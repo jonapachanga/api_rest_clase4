@@ -32,7 +32,7 @@ class ProductController {
 
         const id = productRepository.save(newProduct);
 
-        res.status(HttpStatus.CREATED).json({ id });
+        res.render("/", {});
     }
 
     async update(req = request, res = response) {

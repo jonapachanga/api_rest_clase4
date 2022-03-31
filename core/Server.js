@@ -1,4 +1,5 @@
 const express = require('express');
+const { engine } = require('express-handlebars');
 
 module.exports = class Server {
     constructor() {
@@ -8,16 +9,22 @@ module.exports = class Server {
 
         this.middlewares();
         this.routes();
+        // this.views();
     }
 
     middlewares() {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
-        this.app.use(express.static('public'));
     }
 
     routes() {
         this.app.use(this.productsRoute, require('../routes/product.routes'));
+    }
+
+    views() {
+        this.app.engine('handlebars', engine());
+        this.app.set('view engine', 'handlebars');
+        this.app.set('views', './views');
     }
 
     listen() {
