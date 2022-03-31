@@ -1,9 +1,9 @@
 const { response, request } = require('express');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 
 const Contenedor = require('../models/Contenedor');
 
-const productRepository = new Contenedor('products.json');
+const productRepository = new Contenedor('DB/products.json');
 
 class ProductController {
 
@@ -11,10 +11,10 @@ class ProductController {
         return await productRepository.getAll();
     }
 
-    async findAll(req = request, res = response) {
+    findAll = async (req = request, res = response) => {
         const products = await this._findAllProducts();
 
-        res.status(HttpStatus.OK).json(products);
+        res.status(StatusCodes.OK).json(products);
     }
 
     async findOneById(req = request, res = response) {
@@ -22,7 +22,7 @@ class ProductController {
 
         const product = await productRepository.getById(id);
 
-        const statusCode = !product ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+        const statusCode = !product ? StatusCodes.NOT_FOUND : StatusCodes.OK;
 
         return res.status(statusCode).json(product || { error: 'Product not found' });
     }
@@ -32,7 +32,7 @@ class ProductController {
 
         const id = productRepository.save(newProduct);
 
-        res.status(HttpStatus.CREATED).json({ id });
+        res.status(StatusCodes.CREATED).json({ id });
     }
 
     async update(req = request, res = response) {
@@ -42,12 +42,12 @@ class ProductController {
         const product = await productRepository.getById(id);
 
         if (!product) {
-            return res.status(HttpStatus.NOT_FOUND).json({ error: 'Product not found' });
+            return res.status(StatusCodes.NOT_FOUND).json({ error: 'Product not found' });
         }
 
         const updatedProduct = await productRepository.update(id, newProduct);
 
-        return  res.status(HttpStatus.OK).json(updatedProduct);
+        return  res.status(StatusCodes.OK).json(updatedProduct);
     }
 
     async delete(req = request, res = response) {
@@ -57,12 +57,12 @@ class ProductController {
         const product = await productRepository.getById(id);
 
         if (!product) {
-            return res.status(HttpStatus.NOT_FOUND).json({ error: 'Product not found' });
+            return res.status(StatusCodes.NOT_FOUND).json({ error: 'Product not found' });
         }
 
         await productRepository.deleteById(id);
 
-        res.status(HttpStatus.OK).json({ message: 'Product deleted' })
+        res.status(StatusCodes.OK).json({ message: 'Product deleted' })
     }
 
 }
